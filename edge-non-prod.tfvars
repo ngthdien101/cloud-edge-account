@@ -2,14 +2,15 @@
 # Environment-Specific Variable Values for Edge Services
 # --------------------------------------------------
 
-project_prefix     = "airnz-edge"
-waf_name           = "airnz-edge-waf"
-public_zone_name   = "example.airnz.co.nz"
-redirect_domain    = "www.example.airnz.co.nz"
-logging_bucket_arn = "arn:aws:s3:::airnz-edge-logs"
+project_prefix     = "org-edge"
+waf_name           = "org-edge-waf"
+public_zone_name   = "example.org.co.nz"
+redirect_domain    = "www.example.org.co.nz"
+logging_bucket_arn = "arn:aws:s3:::org-edge-logs"
 
 tags = {
-  env        = "prod"
-  team       = "cloud-platform"
-  managed-by = "terraform"
+  env           = "prod"
+  managed-by    = "cloud-platform"
+  applicationid = "AAAAAxxxxxx"
+  costcenter    = "12345"
 }
