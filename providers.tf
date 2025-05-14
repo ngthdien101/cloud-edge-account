@@ -25,7 +25,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "airnz-terraform-states"
+    bucket         = "org-terraform-states"
     key            = "edge-services/terraform.tfstate"
     region         = "ap-southeast-2"
     dynamodb_table = "terraform-locks"
