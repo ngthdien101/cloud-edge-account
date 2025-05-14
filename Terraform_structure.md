@@ -29,7 +29,8 @@ This Terraform stack provisions a **production-ready Edge Services Account** wit
 
 ## 🚀 Usage
 
-1. Customize `terraform.tfvars` with your environment-specific values:
+1. Clone repo and create your working branch
+2. Customize `terraform.tfvars` with your environment-specific values:
 
 ```hcl
 waf_name           = "airnz-edge-waf"
@@ -42,82 +43,7 @@ tags = {
 }
 ```
 
-2. Initialize and apply:
-
-```bash
-terraform init
-terraform apply
-```
-
-> 💡 We recommend using **Terraform Cloud** or **S3 backend with DynamoDB locking** for production environments.
-
----
-
-## 🔧 Files Overview
-
-### `main.tf`
-Declares modules and passes necessary variables to each:
-
-```hcl
-module "waf" {
-  source     = "./modules/waf"
-  waf_name   = var.waf_name
-  tags       = var.tags
-}
-
-module "cloudfront" {
-  source             = "./modules/cloudfront"
-  waf_web_acl_arn    = module.waf.web_acl_arn
-  tags               = var.tags
-}
-
-module "route53" {
-  source     = "./modules/route53"
-  zone_name  = var.public_zone_name
-  tags       = var.tags
-}
-
-module "redirect_service" {
-  source       = "./modules/redirect_service"
-  domain_name  = var.redirect_domain
-  zone_id      = module.route53.zone_id
-  tags         = var.tags
-}
-
-module "iam" {
-  source = "./modules/iam"
-  tags   = var.tags
-}
-```
-
-### `variables.tf`
-Defines configurable inputs for reusability:
-
-```hcl
-variable "waf_name"           { type = string }
-variable "public_zone_name"   { type = string }
-variable "redirect_domain"    { type = string }
-variable "tags"               { type = map(string) default = {} }
-```
-
-### `outputs.tf`
-Exports useful references post-deployment:
-
-```hcl
-output "cloudfront_distribution_id" {
-  value = module.cloudfront.distribution_id
-}
-
-output "route53_zone_id" {
-  value = module.route53.zone_id
-}
-
-output "waf_web_acl_arn" {
-  value = module.waf.web_acl_arn
-}
-```
-
----
+2. Raise PR for code review. 
 
 ## 🧱 Modules
 Each module contains its own `main.tf`, `variables.tf`, and optionally `outputs.tf`.
@@ -134,9 +60,3 @@ Each module contains its own `main.tf`, `variables.tf`, and optionally `outputs.
 - Follow **least privilege IAM** when integrating other AWS services.
 - Use **CloudFormation StackSets** or **AWS Org SCPs** for account-wide controls.
 - Enable **logging and monitoring** for all services (WAF logs, CloudFront logs, etc.)
-
----
-
-## 📌 Next Steps
-Would you like the detailed module scaffolds next (e.g., for `waf` or `cloudfront`)?
-We can include secure defaults and best practices built-in.
